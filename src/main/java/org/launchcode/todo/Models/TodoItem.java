@@ -45,6 +45,9 @@ public class TodoItem implements ITodoItem {
     
     // add it to the store
     store.put(id, todoItem);
+    
+    // return the newly created item
+    return todoItem;
   }
 
   public static TodoItem findItem(int id) {
