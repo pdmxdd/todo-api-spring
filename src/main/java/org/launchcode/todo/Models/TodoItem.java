@@ -40,8 +40,8 @@ public class TodoItem implements ITodoItem {
 
   public static TodoItem createItem(String text) {
     // TODO: instantiate the TodoItem instance using the private constructor
-    TodoItem todoItem = null;
     int id = ++nextId; // auto-increment the Id to ensure unique
+    TodoItem todoItem = null;
     
     // add it to the store
     store.put(id, todoItem);
