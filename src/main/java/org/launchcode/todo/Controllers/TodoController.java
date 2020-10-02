@@ -24,6 +24,11 @@ public class TodoController {
         return TodoItem.findAllItems();
     }
 
+    @GetMapping(value = "/{id}")
+    public TodoItem getTodoById(@PathVariable int id) {
+        return TodoItem.findItem(id);
+    }
+
     @PostMapping
     public TodoItem postTodo(@RequestBody TodoDto todoDto) {
         return TodoItem.createItem(todoDto.getText());
