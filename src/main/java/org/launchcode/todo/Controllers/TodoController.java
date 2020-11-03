@@ -1,10 +1,8 @@
 package org.launchcode.todo.Controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.launchcode.todo.Models.OutgoingTodoItem;
 import org.launchcode.todo.Models.IncomingTodoItem;
 import org.launchcode.todo.Models.TodoItem;
 import org.launchcode.todo.data.TodoRepository;
@@ -28,13 +26,13 @@ public class TodoController {
     private TodoRepository todoRepository;
 
     @GetMapping
-    public ResponseEntity getTodos() {
+    public ResponseEntity<Object> getTodos() {
         List<TodoItem> todoItems = todoRepository.findAll();
         return ResponseEntity.status(200).body(todoItems);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity getTodoById(@PathVariable int id) {
+    public ResponseEntity<Object> getTodoById(@PathVariable int id) {
         Optional<TodoItem> todoItem = todoRepository.findById(id);
         if(todoItem.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -44,14 +42,14 @@ public class TodoController {
     }
 
     @PostMapping
-    public ResponseEntity postTodo(@RequestBody IncomingTodoItem todoDto) {
+    public ResponseEntity<Object> postTodo(@RequestBody IncomingTodoItem todoDto) {
         TodoItem todoItem = TodoItem.createItem(todoDto.getText());
         TodoItem updatedItem = todoRepository.save(todoItem);
         return ResponseEntity.status(201).body(updatedItem);
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity patchTodo(@PathVariable int id) {
+    public ResponseEntity<Object> patchTodo(@PathVariable int id) {
         Optional<TodoItem> todoItem = todoRepository.findById(id);
         if(todoItem.isEmpty()) {
             return ResponseEntity.status(404).build();
@@ -62,7 +60,7 @@ public class TodoController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity deleteTodo(@PathVariable int id) {
+    public ResponseEntity<Object> deleteTodo(@PathVariable int id) {
         Optional<TodoItem> todoItem = todoRepository.findById(id);
         if(todoItem.isEmpty()) {
             return ResponseEntity.status(404).build();

@@ -1,12 +1,7 @@
 package org.launchcode.todo.Controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
-import org.launchcode.todo.Models.Task;
 import org.launchcode.todo.Models.TaskDto;
-import org.launchcode.todo.Models.TodoItem;
 import org.launchcode.todo.data.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +20,14 @@ public class TaskController {
     TodoRepository todoRepository;
 
     @GetMapping
-    public ResponseEntity getTodoTasks(@PathVariable int id) {
+    public ResponseEntity<Object> getTodoTasks(@PathVariable int id) {
         
 
         return ResponseEntity.status(418).build();
     }
 
     @PostMapping
-    public ResponseEntity putTodoTasks(@PathVariable int id, @RequestBody TaskDto taskDto) {
+    public ResponseEntity<Object> putTodoTasks(@PathVariable int id, @RequestBody TaskDto taskDto) {
         
 
         return ResponseEntity.status(418).build();
