@@ -29,7 +29,6 @@ public class TodoController {
 
     @GetMapping
     public ResponseEntity getTodos() {
-        // return TodoItem.findAllItems();
         List<TodoItem> todoItems = todoRepository.findAll();
         List<OutgoingTodoItem> outgoingItems = new ArrayList<>();
         for(TodoItem todoItem : todoItems) {
@@ -40,7 +39,6 @@ public class TodoController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity getTodoById(@PathVariable int id) {
-        // return TodoItem.findItem(id);
         Optional<TodoItem> todoItem = todoRepository.findById(id);
         if(todoItem.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -52,7 +50,6 @@ public class TodoController {
 
     @PostMapping
     public ResponseEntity postTodo(@RequestBody TodoDto todoDto) {
-        // return TodoItem.createItem(todoDto.getText());
         TodoItem todoItem = TodoItem.createItem(todoDto.getText());
         TodoItem updatedItem = todoRepository.save(todoItem);
         OutgoingTodoItem outgoingTodoItem = OutgoingTodoItem.outgoingTodoItemFromTodoItem(updatedItem);
@@ -61,9 +58,6 @@ public class TodoController {
 
     @PatchMapping(value = "/{id}")
     public ResponseEntity patchTodo(@PathVariable int id) {
-        // TodoItem theItem = TodoItem.findItem(id);
-        // theItem.markAsComplete();
-        // return theItem;
         Optional<TodoItem> todoItem = todoRepository.findById(id);
         if(todoItem.isEmpty()) {
             return ResponseEntity.status(404).build();
@@ -76,11 +70,6 @@ public class TodoController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity deleteTodo(@PathVariable int id) {
-        // boolean deleted = TodoItem.deleteItem(id);
-        // if(deleted) {
-        //     return new ResponseEntity(HttpStatus.NO_CONTENT);
-        // }
-        // return new ResponseEntity(HttpStatus.NOT_FOUND);
         Optional<TodoItem> todoItem = todoRepository.findById(id);
         if(todoItem.isEmpty()) {
             return ResponseEntity.status(404).build();
