@@ -1,8 +1,11 @@
 package org.launchcode.todo.Controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
+import org.launchcode.todo.Models.OutgoingTodoItem;
 import org.launchcode.todo.Models.TodoDto;
 import org.launchcode.todo.Models.TodoItem;
 import org.launchcode.todo.data.TodoRepository;
@@ -26,19 +29,26 @@ public class TodoController {
     private TodoRepository todoRepository;
 
     @GetMapping
-    public List<TodoItem> getTodos() {
+    public ResponseEntity getTodos() {
         // return TodoItem.findAllItems();
-        return todoRepository.findAll();
+        List<TodoItem> todoItems = todoRepository.findAll();
+        List<OutgoingTodoItem> outgoingItems = new ArrayList<>();
+        for(TodoItem todoItem : todoItems) {
+            outgoingItems.add(OutgoingTodoItem.outgoingTodoItemFromTodoItem(todoItem));
+        }
+        return ResponseEntity.status(200).body(outgoingItems);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TodoItem> getTodoById(@PathVariable int id) {
+    public ResponseEntity getTodoById(@PathVariable int id) {
         // return TodoItem.findItem(id);
         Optional<TodoItem> todoItem = todoRepository.findById(id);
         if(todoItem.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<TodoItem>(todoRepository.findById(id).get(), HttpStatus.OK);
+        TodoItem item = todoItem.get();
+        OutgoingTodoItem outgoingItem = OutgoingTodoItem.outgoingTodoItemFromTodoItem(item);
+        return ResponseEntity.status(200).body(outgoingItem);
     }
 
     @PostMapping
