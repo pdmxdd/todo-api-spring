@@ -1,154 +1,141 @@
-# Todo API (Java/Spring)
+# Todo API (Java/Spring) With Tasks
 
-As a part of our prep-work weeks we will be building a Todo API.
+Earlier in this class you built a TODO API with Java/Spring.
 
-Throughout the first two weeks we built a Todo Client that consumed a Todo API in a docker container.
+In short it allowed the API consumer (like the Todo Client, or curl) to:
 
-Now that we know some of the basics of Spring Web we can start building the Todo API ourselves.
+- POST new TodoItems
+- GET the collection of all TodoItems
+- GET a TodoItem by id
+- PATCH a TodoItem which changed the completed property to true
+- DELETE a TodoItem by id which removed it from the underlying database
 
-# Process & Submission
+This repository under the `starter` branch has the base source code with tests for the functionality listed above.
 
-1. fork this repo into your `cohort-#/prep-weeks/<name>/` group with the name `todo-api-spring`
-2. clone the forked repo locally to your machine (using the `ssh` URL)
-3. complete the tasks!
+Our goal is to expand the functionality of this Todo API by giving the consumer the ability to add any number of additional tasks to any one TodoItem.
 
-## Tasks
+# Familiarize yourself with provided code
 
-1. implement the `TodoItem` fields and `ITodoItem` interface methods
-2. implement the `static` `TodoItem` store interaction methods
-3. implement the `TodoItemsController` method handler for the `GET /todos` endpoint
-4. implement the `TodoItemsController` method handler for the `POST /todos` endpoint
-5. implement the `TodoItemsController` method handler for the `PATCH /todos` endpoint
-6. implement the `TodoItemsController` method handler for the `DELETE /todos` endpoint
+## Completed Sections
 
-## Git Workflow
+The following files are the heart of the Todo API and are fully functional. You can run the gradle `test` task and see that this API is currently passing all tests.
 
-- each task must be completed in its own branch `task-#` (ex: `task-1`)
-- you must commit whenever you reach a stable point (**no massive / multi-file commits!!**)
-- after completing each task 1-5 you must `merge` the task feature branch back into `master`
-- after merging into `master` you must push your changes up before branching into the next `task-#`
-- **after completing task 6 you must open a merge request** (`task-6` into `master`) on GitLab and assign your instructor(s) as the reviewer
+This completed section is analogous to the code you wrote when creating your own Todo API.
 
-# Requirements
+### Models
 
-Implement the following classes to build a web API that can be consumed by the todo client front end:
+- IncomingTodoItem.java
+- TodoItem.java
 
-- `TodoItem` Model class
-- `TodoItemsController` class
+We have our entity (`TodoItem`) and it's associated DTO (`IncomingTodoItem`).
 
-## TodoItem Model
+You can probably guess by the name, and verify by looking at the `TodoController`, that the `IncomingTodoItem` DTO is used when an HTTP POST request is made to the server.
 
-Your `TodoItem` Model is a class from which `todoItem` instances can be created. Each `todoItem` instance will hold in own _state_ encapsulating the following data:
+A JSON string representation is made to our server, it is then deserialized from a JSON string into an `IncomingTodoItem` plain old java object (POJO). We can then use that `IncomingTodoItem` POJO to create our entity a TodoItem.
 
-- `id`: a unique identifier for the item
-- `text`: the todo item text
-- `completed` a boolean field indicating the item's completion state (default `false`)
+### Controllers
 
-You will need to implement the blueprint for this state using `private` fields and the appropriate getters/setters (be mindful of which fields should be editable _externally_). An interface `ITodoItem` is available to help guide what you need to implement.
+- TodoController.java
 
-> Managing unique IDs
+Our controller contains all of our HTTP logic. Defining which endpoints are available, how requests to those endpoints are handled, and the HTTP responses served at each endpoint.
 
-To manage items and unique IDs you will need to either keep track internal to the class (using `static` fields / methods) or you may implement an external `TodoItemStore` class as a data structure container for the items.
+### Data Repositories
 
-In the starter code you will find an semi-complete implementation of the `TodoItem` class with the logic for automatically assigning the Ids internally. Feel free to use it as it, extend it or create an external store if you are looking for an extra challenge.
+- TodoRepository.java
 
-> Managing items in the store
+Our JpaRepository of TodoItems. This is our interface to the underlying Postgres database.
 
-A `static` `store` for holding `TodoItem` objects and a number of `static` methods for managing items in that store have been included. The methods are not much more than signatures for now. Use the signature and method name to guide the logic of your implementation.
+### Tests
 
-## TodoItem Controller
+- todo/GetTodosTests.java
+- todo/PostTodosTests.java
+- todo/GetTodoTests.java
+- todo/PatchTodoTests.java
 
-Your `TodoItemController` class will be responsible for exposing the `TodoItem` data as a web API. As an API you will need to implement handler methods for the following **endpoints**
+All of the tests that dictate the API behaves the way we want it to.
 
-> recall that an **endpoint** is:
+MockMvc requests are built, and then we verify that the responses match our expectations.
 
-- the **unique pair** of an HTTP method (`GET, POST, DELETE` etc.) _and_ its URL path (`/the/path`).
+## Incomplete Sections
 
-> **example**: `GET /todos`
+### Models
 
-- **method**: `GET`
-- **path**: `/todos`
+- OutgoingTodoItem.java
+- TaskDto.java
+- Task.java
 
-### `GET /todos`
+### Controllers
 
-> **internal behavior**
+- TaskController.java
 
-1. gets all the todo items from the store
+### Data Repositories
 
-> **response body**
+You will need to create a new JpaRespository for your Task entity so that Hibernate can create the table for you.
 
-- returns the list of todo items
+This file has not been provided for you and you will need to create it from scratch.
 
-### `POST /todos`
+### Tests
 
-> **request body**: a JSON body consisting of the todo item text
+- task/GetTasksTests.java
+- task/PostTasksTests.java
 
-```json
-{
-  "text": "the text of the item"
-}
-```
+# Objective
 
-> **internal behavior**
+We want to add functionality to this project.
 
-1. creates and stores a new todo item in the store
+We want to give the consumer the ability to add any number of tasks to any TodoItem.
 
-> **response body**: a JSON body consisting of the new todo item
+From a user perspective they may create the TodoItem:
 
-- note that the order of the fields does not matter
+- Clean Kitchen
 
-```json
-{
-  "id": 1,
-  "completed": false,
-  "text": "the text of the item"
-}
-```
+However, they may want to subdivide this further by adding tasks to the greater TodoItem:
 
-### `PATCH /todos/{todoId}`
+- Load dishwasher (Task)
+- Clean stove top (Task)
+- Clean counters (Task)
+- Sweep (Task)
+- Mop (Task)
 
-> **request path variable**: the `todoId` is a path variable that must be captured in the handler (see the [@PathVariable Baeldung article](https://www.baeldung.com/spring-pathvariable))
+So in the end they have one TodoItem (Clean Kitchen) and a collection of tasks related to the TodoItem.
 
-> **internal behavior**
+## Take Inventory
 
-1. look up the todo item using the `todoId` path variable value
-2. mark the item as complete
+This will require us as the developers of the API to make some changes.
 
-> **successful response body**: a JSON body consisting of the updated todo item
+In no particular order:
 
-- if an item with the `todoId` is found
+We will have to create a Task entity with a ManyToOne relationship to the TodoItem entity.
 
-```json
-{
-  "id": 1,
-  "completed": true,
-  "text": "the text of the item"
-}
-```
+We will have to refactor the TodoItem entity so that it has a OneToMany relationship with the Task entity.
 
-> **unsuccessful response**: if an item with the `todoId` is **not found**
+We will have to add controller logic that allows consumers to:
 
-- return a `404` status code (Not Found) response
+- GET /todos/{id}/tasks -> 200 Collection of Tasks entities
+- POST /todos/{id}/tasks ({"text": "some task"}) -> 200
 
-### `DELETE /todos/{todoId}`
+This will go in the provided, but empty, `TaskController.java` file.
 
-> **request path variable**: the `todoId` is a path variable that must be captured in the handler
+We will have to create a `TaskDto` for controlling the serialization of incoming, and outgoing requests that contain Tasks.
 
-> **internal behavior**
+We will have to create an `OutgoingTodoItem` DTO for controlling the serialization of outgoing TodoItem representations.
 
-- delete the todo item using the `todoId` path variable value
+We will have to write tests to ensure the new endpoints listed above work properly.
 
-> **successful response**: if the `static` `deleteItem()` method returns `true`
+# Setup
 
-- this indicates the item was found and successfully removed from the store
-- return a `204` status code (No Content success) response
+A `docker-compose.yml` file has been provided for setting up a development, and testing database. You can run `docker-compose up -d` which will launch the two databases on different ports.
 
-> **unsuccessful response**: if the `static` `deleteItem()` method returns `false`
+You will notice in the `build.gradle` file the gradle tasks `test` and `bootRun` have already been setup to work with environment variables. Likewise the `application.properties` file is expecting environment variables.
 
-- this indicates the item was not found and therefore could not be removed from the store
-- return a `404` status code (Not Found) response
+You can run tests from the root of your project with: `./gradlew test -D DB_HOST=localhost -D DB_PORT=5445 -D DB_NAME=todo_test -D DB_USER=todo_test_user -D DB_PASS=todopass`
 
-# References
+You can launch a development server (in which you can fire your own manual curl requests) with: `./gradlew bootRun -D DB_HOST=localhost -D DB_PORT=5444 -D DB_NAME=todo -D DB_USER=todo_user -D DB_PASS=todopass`
 
-- [the `@PathVariable` annotation](https://www.baeldung.com/spring-pathvariable)
-- [the `ResponseEntity` handler method return type](https://www.baeldung.com/spring-response-entity) allows you to return a body and / or configure the response status code, headers etc.
+Tests for the base API objectives have been written for you. You will need to write your own integration tests around Tasks in order to test that you have completed the objective properly.
+
+# Bonus
+
+- Validate incoming JSON and return a `400` response if the incoming data does not meet the validation requirements
+- Write tests for the validation additions you made in the previous step
+- Look into Lombok for cleaning up the various models
