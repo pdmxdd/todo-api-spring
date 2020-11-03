@@ -1,5 +1,6 @@
 package org.launchcode.todo.Models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -38,7 +39,7 @@ public class TodoItem implements ITodoItem {
   private boolean completed;
 
   @OneToMany(mappedBy = "todoItem", cascade = CascadeType.ALL)
-  List<Task> tasks;
+  List<Task> tasks = new ArrayList<>();
 
   public int getId() {
     return this.id;
