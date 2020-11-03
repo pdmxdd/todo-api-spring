@@ -10,3 +10,13 @@ services:
             - "POSTGRES_DB=todo"
             - "POSTGRES_USER=todo_user"
             - "POSTGRES_PASSWORD=todopass"
+
+    postgres-test:
+        image: postgis/postgis:12-master
+        container_name: "todo-api-db-test"
+        ports: 
+            - "5445:5432"
+        environment: 
+            - "POSTGRES_DB=todo_test"
+            - "POSTGRES_USER=todo_test_user"
+            - "POSTGRES_PASSWORD=todopass"

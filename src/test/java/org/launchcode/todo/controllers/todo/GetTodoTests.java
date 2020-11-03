@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @IntegrationTestConfig
-public class GetTodosTests {
-
+public class GetTodoTests {
+    
     @Autowired
     MockMvc mockMvc;
 
@@ -26,22 +26,22 @@ public class GetTodosTests {
     }
 
     @Test
-    @DisplayName(value = "GET TODOS Empty")
-    public void getTodosEmpty() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/todos"))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(0));
+    @DisplayName(value = "GET TODO by id Not Found")
+    public void getTodoNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/todos/-1"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
-    @DisplayName(value = "GET TODOS Populated")
-    public void getTodosPopulated() throws Exception {
-        TodoItem testItem = todoRepository.save(TodoItem.createItem("test todo item"));
-        mockMvc.perform(MockMvcRequestBuilders.get("/todos"))
+    @DisplayName(value = "GET TODO by id")
+    public void getTodo() throws Exception {
+        TodoItem testTodo = todoRepository.save(TodoItem.createItem("test item"));
+        mockMvc.perform(MockMvcRequestBuilders.get("/todos/" + testTodo.getId()))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].text").value(testItem.getText()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].completed").value(testItem.getCompleted()));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(testTodo.getText()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(testTodo.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.completed").value(testTodo.getCompleted()));
     }
-    
+
+
 }
