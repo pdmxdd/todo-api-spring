@@ -26,30 +26,15 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity getTodoTasks(@PathVariable int id) {
-        Optional<TodoItem> optionalTodoItem = todoRepository.findById(id);
-        if(optionalTodoItem.isEmpty()) {
-            return ResponseEntity.status(404).build();
-        }
-        TodoItem todoItem = optionalTodoItem.get();
-        List<Task> tasks = todoItem.getTasks();
-        List<TaskDto> taskDtos = new ArrayList<>();
-        for(Task task : tasks) {
-            taskDtos.add(TaskDto.buildDtoFromTask(task));
-        }
-        return ResponseEntity.status(200).body(taskDtos);
+        
+
+        return ResponseEntity.status(418).build();
     }
 
     @PostMapping
     public ResponseEntity putTodoTasks(@PathVariable int id, @RequestBody TaskDto taskDto) {
-        Optional<TodoItem> optionalTodoItem = todoRepository.findById(id);
-        if(optionalTodoItem.isEmpty()) {
-            return ResponseEntity.status(404).build();
-        }
-        TodoItem todoItem = optionalTodoItem.get();
-        Task task = taskDto.toTask();
-        task.setTodoItem(todoItem);
-        todoItem.addTask(task);
-        todoRepository.save(todoItem);
-        return ResponseEntity.status(200).build();
+        
+
+        return ResponseEntity.status(418).build();
     }
 }

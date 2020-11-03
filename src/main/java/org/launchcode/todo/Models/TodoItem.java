@@ -38,9 +38,6 @@ public class TodoItem implements ITodoItem {
   private String text;
   private boolean completed;
 
-  @OneToMany(mappedBy = "todoItem", cascade = CascadeType.ALL)
-  List<Task> tasks = new ArrayList<>();
-
   public int getId() {
     return this.id;
   }
@@ -51,18 +48,6 @@ public class TodoItem implements ITodoItem {
 
   public boolean getCompleted() {
     return this.completed;
-  }
-
-  public List<Task> getTasks() {
-    return this.tasks;
-  }
-
-  public void setTasks(List<Task> tasks) {
-    this.tasks = tasks;
-  }
-
-  public void addTask(Task task) {
-    this.tasks.add(task);
   }
 
   @Override
