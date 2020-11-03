@@ -1,14 +1,9 @@
 package org.launchcode.todo.Models;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 /**
  * TodoItem Interface
@@ -21,15 +16,6 @@ interface ITodoItem {
   TodoItem markAsComplete();
 }
 
-/**
- * TodoItem Class
- * 
- * <ul>
- *  <li>holds an internal store managing TodoItem instances</li>
- *  <li>exposes static methods for interacting with items in the store</li>
- *  <li>instances must implement the <code>ITodoItem</code> interface</li>
- * </ul>
- */
 @Entity
 public class TodoItem implements ITodoItem {
   @Id
