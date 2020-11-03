@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.launchcode.todo.Models.OutgoingTodoItem;
 import org.launchcode.todo.Models.TodoDto;
 import org.launchcode.todo.Models.TodoItem;
