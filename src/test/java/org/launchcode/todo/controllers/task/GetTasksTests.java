@@ -50,7 +50,7 @@ public class GetTasksTests {
         testTask.setTodoItem(testTodoItem);
         System.out.println(testTask.getTodoItem());
         System.out.println(testTask.getText());
-        testTodoItem.addTasks(testTask);
+        testTodoItem.addTask(testTask);
         todoRepository.save(testTodoItem);
         mockMvc.perform(MockMvcRequestBuilders.get("/todos/" + testTodoItem.getId() + "/tasks"))
         .andExpect(MockMvcResultMatchers.status().isOk())

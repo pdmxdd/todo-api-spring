@@ -48,7 +48,7 @@ public class TaskController {
         TodoItem todoItem = optionalTodoItem.get();
         Task task = taskDto.toTask();
         task.setTodoItem(todoItem);
-        todoItem.addTasks(task);
+        todoItem.addTask(task);
         todoRepository.save(todoItem);
         return ResponseEntity.status(200).build();
     }

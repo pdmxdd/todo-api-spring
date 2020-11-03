@@ -61,7 +61,7 @@ public class TodoItem implements ITodoItem {
     this.tasks = tasks;
   }
 
-  public void addTasks(Task task) {
+  public void addTask(Task task) {
     this.tasks.add(task);
   }
 
