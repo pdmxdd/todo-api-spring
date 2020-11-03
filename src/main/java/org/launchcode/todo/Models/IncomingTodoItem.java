@@ -1,12 +1,12 @@
 package org.launchcode.todo.Models;
 
-public class TodoDto {
+public class IncomingTodoItem {
 
     private String text;
 
-    public TodoDto() {}
+    public IncomingTodoItem() {}
 
-    public TodoDto(String text) {
+    public IncomingTodoItem(String text) {
         this.text = text;
     }
 
