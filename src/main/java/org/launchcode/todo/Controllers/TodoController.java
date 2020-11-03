@@ -51,21 +51,27 @@ public class TodoController {
     }
 
     @PostMapping
-    public TodoItem postTodo(@RequestBody TodoDto todoDto) {
+    public ResponseEntity postTodo(@RequestBody TodoDto todoDto) {
         // return TodoItem.createItem(todoDto.getText());
-        return todoRepository.save(TodoItem.createItem(todoDto.getText()));
+        TodoItem todoItem = TodoItem.createItem(todoDto.getText());
+        TodoItem updatedItem = todoRepository.save(todoItem);
+        OutgoingTodoItem outgoingTodoItem = OutgoingTodoItem.outgoingTodoItemFromTodoItem(updatedItem);
+        return ResponseEntity.status(201).body(outgoingTodoItem);
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<TodoItem> patchTodo(@PathVariable int id) {
+    public ResponseEntity patchTodo(@PathVariable int id) {
         // TodoItem theItem = TodoItem.findItem(id);
         // theItem.markAsComplete();
         // return theItem;
         Optional<TodoItem> todoItem = todoRepository.findById(id);
         if(todoItem.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(404).build();
         }
-        return new ResponseEntity<TodoItem>(todoRepository.save(todoItem.get().markAsComplete()), HttpStatus.OK);
+        TodoItem updatedTodo = todoItem.get().markAsComplete();
+        todoRepository.save(updatedTodo);
+        OutgoingTodoItem outgoingTodoItem = OutgoingTodoItem.outgoingTodoItemFromTodoItem(updatedTodo);
+        return ResponseEntity.status(200).body(outgoingTodoItem);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -77,10 +83,10 @@ public class TodoController {
         // return new ResponseEntity(HttpStatus.NOT_FOUND);
         Optional<TodoItem> todoItem = todoRepository.findById(id);
         if(todoItem.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(404).build();
         }
         todoRepository.delete(todoItem.get());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(204).build();
     }
     
 }
